@@ -1,55 +1,54 @@
 package com.example.project12.repository
 
 import com.example.project12.model.Mahasiswa
-
 import com.example.project12.service_api.MahasiswaService
+import kotlinx.serialization.InternalSerializationApi
 import okio.IOException
 
-interface MahasiswaRepository {
+interface MahasiswaRepository{
+    @OptIn(InternalSerializationApi::class)
     suspend fun getMahasiswa(): List<Mahasiswa>
-
+    @OptIn(InternalSerializationApi::class)
     suspend fun insertMahasiswa(mahasiswa: Mahasiswa)
-
+    @OptIn(InternalSerializationApi::class)
     suspend fun updateMahasiswa(nim: String, mahasiswa: Mahasiswa)
-
     suspend fun deleteMahasiswa(nim: String)
-
-    suspend fun getMahasiswaByNim(nim: String): Mahasiswa
+    @OptIn(InternalSerializationApi::class)
+    suspend fun getMahasiswaById(nim: String): Mahasiswa
 }
 
 class NetworkMahasiswaRepository(
-    private val mahasiswaApiService: MahasiswaService
-) : MahasiswaRepository {
+    private val MahasiswaApiService: MahasiswaService
+): MahasiswaRepository{
+    @OptIn(InternalSerializationApi::class)
     override suspend fun insertMahasiswa(mahasiswa: Mahasiswa) {
-        mahasiswaApiService.insertMahasiswa(mahasiswa)
+        MahasiswaApiService.insertMahasiswa(mahasiswa)
     }
 
+    @OptIn(InternalSerializationApi::class)
     override suspend fun updateMahasiswa(nim: String, mahasiswa: Mahasiswa) {
-        mahasiswaApiService.updateMahasiswa(nim, mahasiswa)
+        MahasiswaApiService.updateMahasiswa(nim, mahasiswa)
     }
 
     override suspend fun deleteMahasiswa(nim: String) {
         try {
-            val response = mahasiswaApiService.deleteMahasiswa(nim)
-            if (!response.isSuccessful) {
-                throw IOException(
-                    "Failed to delete mahasiswa. HTTP Status code: " +
-                            "${response.code()}"
-                )
-            } else {
+            val response = MahasiswaApiService.deleteMahasiswa(nim)
+            if (!response.isSuccessful){
+                throw IOException("Failed to delete mahasiswa. HTTP Status code: ${response.code()}")
+            } else{
                 response.message()
                 println(response.message())
             }
-        } catch (e: Exception) {
+        } catch (e:Exception){
             throw e
         }
-
     }
 
-    override suspend fun getMahasiswa(): List<Mahasiswa> {
-        mahasiswaApiService.getMahasiswa()
-
-        override suspend fun getMahasiswaById(nim: String): Mahasiswa {
-            return mahasiswaApiService.getMahasiswaByNim(nim)
-        }
+    @OptIn(InternalSerializationApi::class)
+    override suspend fun getMahasiswa(): List<Mahasiswa> = MahasiswaApiService.getMahasiswa()
+    @OptIn(InternalSerializationApi::class)
+    override suspend fun getMahasiswaById(nim: String): Mahasiswa {
+        return MahasiswaApiService.getMahasiswaById(nim)
     }
+
+}
