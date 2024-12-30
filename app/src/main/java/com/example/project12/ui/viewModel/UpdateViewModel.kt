@@ -16,7 +16,7 @@ import kotlinx.serialization.InternalSerializationApi
 class UpdateViewModel(
     savedStateHandle: SavedStateHandle,
     private val mahasiswaRepository: MahasiswaRepository
-) : ViewModel() {
+): ViewModel(){
     var updateUiState by mutableStateOf(InsertUiState())
         private set
 
@@ -29,11 +29,18 @@ class UpdateViewModel(
         }
     }
 
-    fun updateInsertMhsState(insertUiEvent: InsertUiEvent) {
+    fun updateInsertMhsState(insertUiEvent: InsertUiEvent){
         updateUiState = InsertUiState(insertUiEvent = insertUiEvent)
     }
-}
 
-fun updateInsertMhsState(insertUiEvent: InsertUiEvent) {
-    updateUiState = InsertUiState(insertUiEvent = insertUiEvent)
+    @OptIn(InternalSerializationApi::class)
+    suspend fun updateMhs(){
+        viewModelScope.launch {
+            try {
+                mahasiswaRepository.updateMahasiswa(_nim, updateUiState.insertUiEvent.toMhs())
+            }catch (e: Exception){
+                e.printStackTrace()
+            }
+        }
+    }
 }
