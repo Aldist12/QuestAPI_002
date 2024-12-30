@@ -33,3 +33,7 @@ class UpdateViewModel(
         updateUiState = InsertUiState(insertUiEvent = insertUiEvent)
     }
 }
+
+fun updateInsertMhsState(insertUiEvent: InsertUiEvent) {
+    updateUiState = InsertUiState(insertUiEvent = insertUiEvent)
+}
