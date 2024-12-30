@@ -1,8 +1,11 @@
 package com.example.project12.ui.viewModel
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.project12.model.Mahasiswa
 import com.example.project12.repository.MahasiswaRepository
 import kotlinx.coroutines.launch
 import kotlinx.serialization.InternalSerializationApi
@@ -40,4 +43,16 @@ data class DetailUiState(
 ) {
     val isUiEventNotEmpty: Boolean
         get() = detailUiEvent != InsertUiEvent()
+}
+
+@OptIn(InternalSerializationApi::class)
+fun Mahasiswa.toDetailEvent(): InsertUiEvent {
+    return InsertUiEvent(
+        nim = nim,
+        nama = nama,
+        alamat = alamat,
+        jenisKelamin = jenisKelamin,
+        kelas = kelas,
+        angkatan = angkatan,
+    )
 }
